@@ -133,6 +133,14 @@ std::vector<std::shared_ptr<GameBoard>> GameBoard::moveOptions(std::uint32_t loc
             copy->m_gb.board.at(7) = m_gb.board.at(loc);
             options.push_back(copy);   
         }
+
+        if(m_gb.board.at(6) == 0 && m_gb.board.at(11) == -1) {
+            copy = std::make_shared<GameBoard>(m_gb);
+            copy->m_gb.board.at(loc) = -1;
+            copy->m_gb.board.at(6) = -1;
+            copy->m_gb.board.at(11) = m_gb.board.at(loc);
+            options.push_back(copy);   
+        }
     }else if(loc == 2) {
         if(m_gb.board.at(1) == 0 && m_gb.board.at(0) == -1) {
             copy = std::make_shared<GameBoard>(m_gb);
@@ -282,8 +290,18 @@ std::ostream& operator<<(std::ostream& stream, const game::GameBoard& gb) {
     std::uint32_t numValExpected = 3;
     std::uint32_t valIndex = 0;
     for(uint32_t i = 0; i < gb.m_gb.size; ++i) {
+        if (numValExpected == 2) {
+            stream<<" ";
+        }
+        stream<<"|";
         for(uint32_t j = 0; j < numValExpected; ++j) {
-            stream<<gb.m_gb.board.at(valIndex)<<"|";
+            int val = gb.m_gb.board.at(valIndex);
+            if(val == -1) {
+               stream<<"*"<<"|"; 
+            } else {
+                stream<<val<<"|";
+            }
+            
             ++valIndex;
         }
         stream<<std::endl;
